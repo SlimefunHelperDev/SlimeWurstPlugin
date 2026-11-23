@@ -36,33 +36,6 @@ for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
 
-set WRAPPER_PROPS=%APP_HOME%\gradle\wrapper\gradle-wrapper.properties
-set LOCAL_GRADLE_ZIP=
-set DEFAULT_GRADLE_DIST_URL=
-
-if exist "%WRAPPER_PROPS%" (
-    for /f "usebackq tokens=1,* delims==" %%a in ("%WRAPPER_PROPS%") do (
-        if /i "%%a"=="localDistributionUrl" set LOCAL_GRADLE_ZIP=%%b
-        if /i "%%a"=="distributionUrl" set DEFAULT_GRADLE_DIST_URL=%%b
-    )
-)
-
-for %%i in ("%LOCAL_GRADLE_ZIP%") do set LOCAL_GRADLE_ZIP=%%~fi
-set LOCAL_GRADLE_DIST_URL=file:///%LOCAL_GRADLE_ZIP:\=/%
-
-if exist "%LOCAL_GRADLE_ZIP%" (
-    set GRADLE_DIST_URL=%LOCAL_GRADLE_DIST_URL%
-) else (
-    set GRADLE_DIST_URL=%DEFAULT_GRADLE_DIST_URL%
-)
-
-echo [gradlew] Using LOCAL_GRADLE_ZIP: %LOCAL_GRADLE_ZIP%
-echo [gradlew] Using DEFAULT_GRADLE_DIST_URL: %DEFAULT_GRADLE_DIST_URL%
-echo [gradlew] Using Gradle distribution URL: %GRADLE_DIST_URL%
-
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$props = '%WRAPPER_PROPS%'; $url = '%GRADLE_DIST_URL%'; $content = Get-Content -Raw -LiteralPath $props; $updated = [regex]::Replace($content, '(?m)^distributionUrl=.*$', ('distributionUrl=' + $url)); if ($content -notmatch '(?m)^distributionUrl=') { throw 'distributionUrl not found in gradle-wrapper.properties' }; if ($updated -ne $content) { Set-Content -LiteralPath $props -Value $updated -NoNewline }"
-if %ERRORLEVEL% neq 0 goto fail
-
 @rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome
 
